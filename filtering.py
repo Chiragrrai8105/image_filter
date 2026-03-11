@@ -1,0 +1,97 @@
+import cv2
+from PIL import Image
+
+print("1.Blur  2.crop  3.Overlay  4.Rotate  5.Gradient")
+
+n = int(input("Enter the choice: "))
+
+if n == 1:
+    img = cv2.imread('"D:\course\Gradient.jpg"')
+    img1 = cv2.resize(img, (800, 700))
+    img = cv2.blur(img1, (20, 20))
+    cv2.imshow('image', img1)
+    cv2.imshow("blurrrdimage", img)
+    cv2.imwrite("D:\\Edited photos\\Blurred Image.jpg", img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+elif n == 2:
+    img = cv2.imread("D:\\photo\\iron man.jpg")
+    img1 = cv2.resize(img, (800, 700))
+    x = 0
+    y = 0
+    h = 900
+    w = 900
+    cropimg = img[y:y+h, x:x+w]
+    cv2.imshow("Cropped Images", cropimg)
+    cv2.imshow("Original Image", img1)
+    cv2.imwrite("D:\\Edited photos\\Cropped Image.jpg", cropimg)
+    cv2.waitKey(0)
+
+elif n == 3:
+    def changeImageSize(width, height, image):
+        return image.resize((width, height))
+
+    image1 = Image.open("D:\\photo\\iron man.jpg")
+    image2 = Image.open("D:\\photo\\captain america.jpg")
+
+    image3 = changeImageSize(800, 500, image1)
+    image4 = changeImageSize(800, 500, image2)
+
+    image5 = image3.convert("RGBA")
+    image6 = image4.convert("RGBA")
+
+    alphaBlended1 = Image.blend(image5, image6, alpha=0.2)
+    image1.show()
+    image2.show()
+    alphaBlended1.show()
+    alphaBlended1_rgb = alphaBlended1.convert("RGB")
+    alphaBlended1_rgb.save("D:\\Edited photos\\blended Image.jpg")
+    
+elif n==4:
+    input_image = cv2.imread('D:\\photo\\iron man.jpg')
+    resized_image = cv2.resize(input_image, (800, 600))
+    
+    rotated_image = cv2.rotate(input_image, cv2.ROTATE_90_COUNTERCLOCKWISE)
+    rotated_resized_image = cv2.resize(rotated_image, (800, 600))
+    
+    cv2.imshow('Original Image', resized_image)
+    cv2.imshow('Rotated Image', rotated_resized_image)
+    cv2.imwrite("D:\\Edited photos\\Cropped Image.jpg", rotated_resized_image)
+    
+    cv2.waitKey(0)
+    
+    cv2.destroyAllWindows()
+    
+elif n==5:
+    import cv2
+    import numpy as np
+    
+    input_image = cv2.imread('D:\\photo\\iron man.jpg')
+    
+    resized_image = cv2.resize(input_image, (400, 400))
+    
+    height, width, _ = resized_image.shape
+    
+    gradient = np.zeros((height, width), dtype=np.float32)
+    
+    for i in range(height):
+        gradient[i, :] = (i / height)
+    gradient = cv2.normalize(gradient, None, 0, 1, cv2.NORM_MINMAX)
+    
+    gradient = cv2.cvtColor(gradient.astype(np.float32), cv2.COLOR_GRAY2BGR)
+    
+    shadowed_image = np.multiply(resized_image.astype(np.float32), gradient)
+    
+    shadowed_image1 = np.uint8(np.clip(shadowed_image, 0, 255))
+    
+    cv2.imshow('Shadow Effect Image', shadowed_image1)
+    cv2.imshow("image", resized_image)
+    cv2.imwrite("D:\\Edited photos\\Gradient.jpg", shadowed_image1)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    
+else:
+    print("wrong option")
+
+
