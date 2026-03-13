@@ -11,7 +11,7 @@ if n == 1:
     img = cv2.blur(img1, (20, 20))
     cv2.imshow('image', img1)
     cv2.imshow("blurrrdimage", img)
-    cv2.imwrite("D:\\Edited photos\\Blurred Image.jpg", img)
+    cv2.imwrite("D:\image_filter\Edited photos\Blurred Image.jpg", img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
@@ -25,7 +25,7 @@ elif n == 2:
     cropimg = img[y:y+h, x:x+w]
     cv2.imshow("Cropped Images", cropimg)
     cv2.imshow("Original Image", img1)
-    cv2.imwrite("D:\\Edited photos\\Cropped Image.jpg", cropimg)
+    cv2.imwrite("D:\image_filter\Edited photos\Cropped Image.jpg", cropimg)
     cv2.waitKey(0)
 
 elif n == 3:
@@ -46,10 +46,10 @@ elif n == 3:
     image2.show()
     alphaBlended1.show()
     alphaBlended1_rgb = alphaBlended1.convert("RGB")
-    alphaBlended1_rgb.save("D:\\Edited photos\\blended Image.jpg")
+    alphaBlended1_rgb.save("D:\image_filter\Edited photos\ blended Image.jpg")
     
 elif n==4:
-    input_image = cv2.imread('D:\\photo\\iron man.jpg')
+    input_image = cv2.imread('D:\image_filter\Edited photos\iron man.jpg')
     resized_image = cv2.resize(input_image, (800, 600))
     
     rotated_image = cv2.rotate(input_image, cv2.ROTATE_90_COUNTERCLOCKWISE)
@@ -87,7 +87,7 @@ elif n==5:
     
     cv2.imshow('Shadow Effect Image', shadowed_image1)
     cv2.imshow("image", resized_image)
-    cv2.imwrite("D:\\Edited photos\\Gradient.jpg", shadowed_image1)
+    cv2.imwrite("D:\image_filter\Edited photos\Gradient.jpg", shadowed_image1)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     
