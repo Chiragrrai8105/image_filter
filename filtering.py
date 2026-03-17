@@ -14,6 +14,9 @@ n = int(input("Enter the choice: "))
 
 if n == 1:
     file_path = upload_image()
+    if not file_path:
+        print("No file selected")
+        exit()
     img = cv2.imread(file_path)
     img1 = cv2.resize(img, (800, 700))
     img = cv2.blur(img1, (20, 20))
@@ -25,6 +28,9 @@ if n == 1:
 
 elif n == 2:
     file_path = upload_image()
+    if not file_path:
+        print("No file selected")
+        exit()
     img = cv2.imread(file_path)
     img1 = cv2.resize(img, (800, 700))
     x = 0
@@ -40,9 +46,14 @@ elif n == 2:
 elif n == 3:
     def changeImageSize(width, height, image):
         return image.resize((width, height))
-
     image1_path = upload_image()
+    if not image1_path:
+        print("No file selected")
+        exit()
     image2_path = upload_image()
+    if not image2_path:
+        print("No file selected")
+        exit()
     image1 = Image.open(image1_path)
     image2 = Image.open(image2_path)
     image3 = changeImageSize(800, 500, image1)
@@ -60,6 +71,9 @@ elif n == 3:
     
 elif n==4:
     file_path = upload_image()
+    if not file_path:
+        print("No file selected")
+        exit()
     input_image = cv2.imread(file_path)
     resized_image = cv2.resize(input_image, (800, 600))
     
@@ -79,6 +93,9 @@ elif n==5:
     import numpy as np
     
     file_path = upload_image()
+    if not file_path:
+        print("No file selected")
+        exit()
     input_image = cv2.imread(file_path)
     
     resized_image = cv2.resize(input_image, (400, 400))
