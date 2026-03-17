@@ -1,5 +1,6 @@
 from tkinter import Tk, filedialog
 import cv2
+import numpy as np
 from PIL import Image
 def upload_image():
     root = Tk()
@@ -8,6 +9,7 @@ def upload_image():
         title="Select Image",
         filetypes=[("Image Files", "*.jpg *.jpeg *.png *.bmp")]
     )
+    root.destroy()
     return file_path
 print("1.Blur  2.crop  3.Overlay  4.Rotate  5.Gradient")
 n = int(input("Enter the choice: "))
@@ -67,7 +69,7 @@ elif n == 3:
     image2.show()
     alphaBlended1.show()
     alphaBlended1_rgb = alphaBlended1.convert("RGB")
-    alphaBlended1_rgb.save("D:\\image_filter\\Edited photos\\blended Image.jpg")
+    alphaBlended1_rgb.save("D:\\image_filter\\Edited photos\\blended_Image.jpg")
     
 elif n==4:
     file_path = upload_image()
@@ -82,16 +84,13 @@ elif n==4:
     
     cv2.imshow('Original Image', resized_image)
     cv2.imshow('Rotated Image', rotated_resized_image)
-    cv2.imwrite("D:\\Edited photos\\Cropped Image.jpg", rotated_resized_image)
+    cv2.imwrite("D:\\image_filter\\Edited photos\\Cropped Image.jpg", rotated_resized_image)
     
     cv2.waitKey(0)
     
     cv2.destroyAllWindows()
     
 elif n==5:
-    import cv2
-    import numpy as np
-    
     file_path = upload_image()
     if not file_path:
         print("No file selected")
