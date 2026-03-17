@@ -1,12 +1,20 @@
+from tkinter import Tk, filedialog
 import cv2
 from PIL import Image
-
+def upload_image():
+    root = Tk()
+    root.withdraw()  # Hide main window
+    file_path = filedialog.askopenfilename(
+        title="Select Image",
+        filetypes=[("Image Files", "*.jpg *.jpeg *.png *.bmp")]
+    )
+    return file_path
 print("1.Blur  2.crop  3.Overlay  4.Rotate  5.Gradient")
-
 n = int(input("Enter the choice: "))
 
 if n == 1:
-    img = cv2.imread('"D:\course\Gradient.jpg"')
+    file_path = upload_image()
+    img = cv2.imread(file_path)
     img1 = cv2.resize(img, (800, 700))
     img = cv2.blur(img1, (20, 20))
     cv2.imshow('image', img1)
