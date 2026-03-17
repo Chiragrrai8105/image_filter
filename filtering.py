@@ -1,125 +1,154 @@
-from tkinter import Tk, filedialog
 import cv2
 import numpy as np
 from PIL import Image
+import tkinter as tk
+from tkinter import filedialog
+import os
+
+# ---------- Create folder if not exists ----------
+save_path = r"D:\image_filter\Edited photos"
+os.makedirs(save_path, exist_ok=True)
+
+# ---------- Upload function ----------
 def upload_image():
-    root = Tk()
-    root.withdraw()  # Hide main window
     file_path = filedialog.askopenfilename(
         title="Select Image",
         filetypes=[("Image Files", "*.jpg *.jpeg *.png *.bmp")]
     )
-    root.destroy()
     return file_path
-print("1.Blur  2.crop  3.Overlay  4.Rotate  5.Gradient")
-n = int(input("Enter the choice: "))
 
-if n == 1:
-    file_path = upload_image()
-    if not file_path:
-        print("No file selected")
-        exit()
-    img = cv2.imread(file_path)
-    img1 = cv2.resize(img, (800, 700))
-    img = cv2.blur(img1, (20, 20))
-    cv2.imshow('image', img1)
-    cv2.imshow("blurrrdimage", img)
-    cv2.imwrite("D:\\image_filter\\Edited photos\\Blurred Image.jpg", img)
+
+# ---------- BLUR ----------
+def blur_image():
+    path = upload_image()
+    if not path:
+        return
+
+    img = cv2.imread(path)
+    if img is None:
+        print("Error loading image")
+        return
+
+    img = cv2.resize(img, (800, 700))
+    blurred = cv2.blur(img, (20, 20))
+
+    cv2.imshow("Blurred Image", blurred)
+
+    cv2.imwrite(os.path.join(save_path, "Blurred_Image.jpg"), blurred)
+
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-elif n == 2:
-    file_path = upload_image()
-    if not file_path:
-        print("No file selected")
-        exit()
-    img = cv2.imread(file_path)
-    img1 = cv2.resize(img, (800, 700))
-    x = 0
-    y = 0
-    h = 900
-    w = 900
-    cropimg = img[y:y+h, x:x+w]
-    cv2.imshow("Cropped Images", cropimg)
-    cv2.imshow("Original Image", img1)
-    cv2.imwrite("D:\\image_filter\\Edited photos\\Cropped Image.jpg", cropimg)
+
+# ---------- CROP ----------
+def crop_image():
+    path = upload_image()
+    if not path:
+        return
+
+    img = cv2.imread(path)
+    if img is None:
+        print("Error loading image")
+        return
+
+    img = cv2.resize(img, (800, 700))
+
+    h, w, _ = img.shape
+    crop = img[0:h//2, 0:w//2]
+
+    cv2.imshow("Cropped Image", crop)
+
+    cv2.imwrite(os.path.join(save_path, "Cropped_Image.jpg"), crop)
+
     cv2.waitKey(0)
-
-elif n == 3:
-    def changeImageSize(width, height, image):
-        return image.resize((width, height))
-    image1_path = upload_image()
-    if not image1_path:
-        print("No file selected")
-        exit()
-    image2_path = upload_image()
-    if not image2_path:
-        print("No file selected")
-        exit()
-    image1 = Image.open(image1_path)
-    image2 = Image.open(image2_path)
-    image3 = changeImageSize(800, 500, image1)
-    image4 = changeImageSize(800, 500, image2)
-
-    image5 = image3.convert("RGBA")
-    image6 = image4.convert("RGBA")
-
-    alphaBlended1 = Image.blend(image5, image6, alpha=0.2)
-    image1.show()
-    image2.show()
-    alphaBlended1.show()
-    alphaBlended1_rgb = alphaBlended1.convert("RGB")
-    alphaBlended1_rgb.save("D:\\image_filter\\Edited photos\\blended_Image.jpg")
-    
-elif n==4:
-    file_path = upload_image()
-    if not file_path:
-        print("No file selected")
-        exit()
-    input_image = cv2.imread(file_path)
-    resized_image = cv2.resize(input_image, (800, 600))
-    
-    rotated_image = cv2.rotate(input_image, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    rotated_resized_image = cv2.resize(rotated_image, (800, 600))
-    
-    cv2.imshow('Original Image', resized_image)
-    cv2.imshow('Rotated Image', rotated_resized_image)
-    cv2.imwrite("D:\\image_filter\\Edited photos\\Cropped Image.jpg", rotated_resized_image)
-    
-    cv2.waitKey(0)
-    
     cv2.destroyAllWindows()
-    
-elif n==5:
-    file_path = upload_image()
-    if not file_path:
-        print("No file selected")
-        exit()
-    input_image = cv2.imread(file_path)
-    
-    resized_image = cv2.resize(input_image, (400, 400))
-    
-    height, width, _ = resized_image.shape
-    
-    gradient = np.zeros((height, width), dtype=np.float32)
-    
-    for i in range(height):
-        gradient[i, :] = (i / height)
-    gradient = cv2.normalize(gradient, None, 0, 1, cv2.NORM_MINMAX)
-    
+
+
+# ---------- OVERLAY ----------
+def overlay_image():
+    print("Select first image")
+    path1 = upload_image()
+    if not path1:
+        return
+
+    print("Select second image")
+    path2 = upload_image()
+    if not path2:
+        return
+
+    img1 = Image.open(path1).resize((800, 500)).convert("RGBA")
+    img2 = Image.open(path2).resize((800, 500)).convert("RGBA")
+
+    blended = Image.blend(img1, img2, alpha=0.5)
+
+    blended.show()
+
+    blended.convert("RGB").save(os.path.join(save_path, "Blended_Image.jpg"))
+
+
+# ---------- ROTATE ----------
+def rotate_image():
+    path = upload_image()
+    if not path:
+        return
+
+    img = cv2.imread(path)
+    if img is None:
+        print("Error loading image")
+        return
+
+    rotated = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
+    rotated = cv2.resize(rotated, (800, 600))
+
+    cv2.imshow("Rotated Image", rotated)
+
+    cv2.imwrite(os.path.join(save_path, "Rotated_Image.jpg"), rotated)
+
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
+# ---------- GRADIENT ----------
+def gradient_image():
+    path = upload_image()
+    if not path:
+        return
+
+    img = cv2.imread(path)
+    if img is None:
+        print("Error loading image")
+        return
+
+    img = cv2.resize(img, (400, 400))
+
+    h, w, _ = img.shape
+
+    gradient = np.linspace(0, 1, h).reshape(h, 1)
+    gradient = np.repeat(gradient, w, axis=1)
     gradient = cv2.cvtColor(gradient.astype(np.float32), cv2.COLOR_GRAY2BGR)
-    
-    shadowed_image = np.multiply(resized_image.astype(np.float32), gradient)
-    
-    shadowed_image1 = np.uint8(np.clip(shadowed_image, 0, 255))
-    
-    cv2.imshow('Shadow Effect Image', shadowed_image1)
-    cv2.imshow("image", resized_image)
-    cv2.imwrite("D:\\image_filter\\Edited photos\\Gradient.jpg", shadowed_image1)
+
+    result = img.astype(np.float32) * gradient
+    result = np.uint8(result)
+
+    cv2.imshow("Gradient Effect", result)
+
+    cv2.imwrite(os.path.join(save_path, "Gradient_Image.jpg"), result)
+
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    
-else:
-    print("wrong option")
 
 
+# ---------- GUI ----------
+root = tk.Tk()
+root.title("Image Editor")
+root.geometry("300x300")
+
+tk.Label(root, text="Image Editor", font=("Arial", 16)).pack(pady=10)
+
+tk.Button(root, text="Blur", width=20, command=blur_image).pack(pady=5)
+tk.Button(root, text="Crop", width=20, command=crop_image).pack(pady=5)
+tk.Button(root, text="Overlay", width=20, command=overlay_image).pack(pady=5)
+tk.Button(root, text="Rotate", width=20, command=rotate_image).pack(pady=5)
+tk.Button(root, text="Gradient", width=20, command=gradient_image).pack(pady=5)
+
+root.mainloop()
